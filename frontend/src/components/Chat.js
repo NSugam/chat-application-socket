@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Context } from '../context/SharedState';
-import { initializeSocket, socket } from './socket';
+import { socket } from './socket';
 
 export default function Chat() {
     const { username } = useParams();
@@ -11,9 +11,7 @@ export default function Chat() {
     const [input, setInput] = useState('');
 
     useEffect(() => {
-
-        initializeSocket(states.user?.username, states.setOnlineUsers);
-
+        console.log(states.onlineUsers)
         if (!username) return;
 
         const handleReceiveMessage = (message) => {
@@ -33,7 +31,7 @@ export default function Chat() {
 
         socket.on("receive-message", handleReceiveMessage);
         socket.on("sent-message", handleSentMessage);
-        socket.on("join-chat", handleJoinChat);
+        socket.on("join-chat-messages", handleJoinChat);
 
         socket.emit("join-chat", {
             senderUsername: states.user.username,
@@ -59,7 +57,7 @@ export default function Chat() {
     };
 
     return (
-        <div className='container col-sm-7 col-md-4 rounded bg-dark' style={{ maxHeight: '80vh', overflowY: 'auto' }}>
+        <div className='container col-sm-7 col-md-4 rounded bg-dark mt-5' style={{ maxHeight: '80vh', overflowY: 'auto' }}>
             <h5 className='text-light mt-2 p-2 sticky-top bg-success rounded'style={{zIndex: 100}}>{username}</h5>
             <hr className='text-light'/>
             <div className="chat-history-messages mx-4">
@@ -85,7 +83,7 @@ export default function Chat() {
                         (msg.receiverUsername === username && msg.senderUsername === states.user.username)
                     )
                     .map((msg, index) => (
-                        <div key={index} className='my-2 container bg-light p-2 rounded'>
+                        <div key={index} className='my-3 container bg-light p-2 rounded'>
                             <strong className={msg.senderUsername === username ? 'text-danger' : 'text-success'}>
                                 {msg.senderUsername === username ? msg.senderUsername : 'Me'}:
                             </strong>
@@ -98,13 +96,13 @@ export default function Chat() {
 
             <div className="bg-dark p-3 d-flex align-items-center sticky-bottom">                
             <input
-                    className="col-sm-9 rounded p-2 me-2"
+                    className="col-sm-9 rounded p-2 me-2 col-10"
                     name="message"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Type a message..."
                 />
-                <button className="btn btn-primary col-sm-3" onClick={sendMessage}>
+                <button className="btn btn-primary me-2" onClick={sendMessage}>
                     Send
                 </button>
             </div>

@@ -1,26 +1,35 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { createContext } from "react";
-import { Slide, toast } from 'react-toastify';
 import { initializeSocket, socket } from '../components/socket';
 
 const Context = createContext();
 
 const SharedState = (props) => {
 
-    const hostname = process.env.REACT_APP_LOCALHOST
+    const hostname = process.env.REACT_APP_HOSTNAME
 
-    //Storing Socket connection
-    const [isConnected, setIsConnected] = useState(socket.connected);
-
-    const [onlineUsers, setOnlineUsers] = useState([]);
+    const [loading, setLoading] = useState(false)
 
     // Storing user details
     const [user, setUser] = useState({});
     const [isAuthenticated, setIsAuthenticated] = useState(false)
 
+    //Storing Socket connection
+    const [isConnected, setIsConnected] = useState(socket.connected)
 
+    //Storing list of active users
+    const [onlineUsers, setOnlineUsers] = useState([]);
 
+    //Storing list of available groups
+    const [groupList, setGroupList] = useState([]);
+
+    //Fetch list of active users
+    useEffect(() => {
+        initializeSocket(user?.username, setOnlineUsers);
+    }, [isAuthenticated]);
+
+    //Fetch loggedIn user profile details
     useEffect(() => {
         const fetchuser = async () => {
             await axios.get(hostname + '/api/auth/profile').then((res) => {
@@ -29,15 +38,9 @@ const SharedState = (props) => {
                     setUser(res.data.user);
                     initializeSocket(res.data.user.username, setOnlineUsers)
                 }
-    
+
             }).catch((error) => {
                 console.error('Error backend response:', error);
-                toast.error(error.response?.data.message, {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    theme: "dark",
-                    transition: Slide
-                });
             });
         };
 
@@ -65,9 +68,11 @@ const SharedState = (props) => {
     return (
         <Context.Provider value={{
             hostname,
+            loading, setLoading,
             user, setUser,
             isConnected, setIsConnected,
             onlineUsers, setOnlineUsers,
+            groupList, setGroupList,
             isAuthenticated, setIsAuthenticated,
         }}>
 

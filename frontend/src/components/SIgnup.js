@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useContext, useState } from 'react'
 import { Bounce, toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Context } from '../context/SharedState';
 
 export default function Signup() {
@@ -19,7 +19,7 @@ export default function Signup() {
 
     const handleSignup = (e) => {
         e.preventDefault();
-        axios.post(states.hostname+'/api/user/register', userInput).then((res)=> {
+        axios.post(states.hostname+'/api/auth/register', userInput).then((res)=> {
             if (res.data.success) {
                 toast.success(res.data.message, {
                     position: "top-right",
@@ -51,30 +51,26 @@ export default function Signup() {
     }
     return (
         <>
-            <div className='container col-sm-4 mt-5 pt-5'>
-                <h2 className='text-center mb-4'>Welcome to RedPanda Shopping</h2>
-                <hr className='m-auto w-50 mb-5' />
-                <form onSubmit={handleSignup}>
-                    <div class="mb-3">
+            <div className='container col-sm-4 mt-5'>
+                <h2 className='text-center text-light mb-3'>Welcome to Public Chat Application</h2>
+                <h4 className='text-center text-secondary'>- Socket.io -</h4>
+                <form onSubmit={handleSignup} className='text-light'>
+                    <div class="mb-2">
                         <label class="form-label">Username</label>
                         <input type="text" class="form-control" name='username' onChange={handleInput} required />
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Phone number</label>
-                        <input type="number" class="form-control" name='phone' onChange={handleInput} required />
-                    </div>
-                    <div class="mb-3">
+                    <div class="mb-2">
                         <label class="form-label">Email address</label>
                         <input type="email" class="form-control" name='email' onChange={handleInput} required />
-                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-2">
                         <label class="form-label">Password</label>
                         <input type="password" class="form-control" name='password' onChange={handleInput} required />
                     </div>
-                    <div className='text-end'>
+                    <hr/>
+                    <div className='text-end mt-4'>
                         <button type='submit' class="btn btn-danger w-100">Signup</button>
-                        <button class="btn btn-outline-dark w-100 mt-3" onClick={()=>navigate('/login')}>Already have a account</button>
+                        <Link class="btn btn-success w-100 mt-3" to='/login'>Already have a account?</Link>
                     </div>
                 </form>
             </div>

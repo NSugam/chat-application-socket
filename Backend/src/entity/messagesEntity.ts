@@ -18,8 +18,8 @@ export class messagesEntity extends BaseEntity {
     @ManyToOne(() => userEntity, user => user.id, { nullable: false })
     sender: userEntity
 
-    @ManyToOne(() => userEntity, user => user.id, { nullable: false })
-    receiver: userEntity
+    @ManyToOne(() => userEntity, user => user.id, { nullable: true })
+    receiver: userEntity | null
 
     @ManyToOne(() => groupEntity, group => group.id, { nullable: true })
     group: groupEntity | null

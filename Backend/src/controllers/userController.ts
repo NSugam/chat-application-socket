@@ -38,9 +38,9 @@ exports.userLogin = async (req: any, res: any, next: any) => {
         sameSite: 'strict',
         httpOnly: true, 
         path: '/',
-        secure: false,   // true in production with HTTPS
+        secure: true,   // true in production with HTTPS
         expires: new Date(new Date().getTime() + 60 * 60 * 1000), //1hr
     });
 
-    return res.status(200).json({ message: "Login Success", success: true, user })
+    return res.status(200).json({ message: "Login Success", success: true })
 }

@@ -17,7 +17,7 @@ export class groupEntity extends BaseEntity {
     @Column({ nullable: false, type: 'varchar' })
     group_name: string
 
-    @ManyToOne(() => userEntity, user => user.id)
+    @ManyToOne(() => userEntity, user => user.id, { nullable: false })
     created_by: userEntity
 
     @CreateDateColumn()

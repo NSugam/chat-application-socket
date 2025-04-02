@@ -8,7 +8,6 @@ const PORT = process.env.PORT
 
 // Socket Server Imports
 const { createServer } = require("http");
-const { Server } = require("socket.io");
 
 //Middleware Imports
 const errorMiddleware = require('./src/middlewares/errorMiddleware')
